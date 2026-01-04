@@ -14,13 +14,47 @@
     <!-- 列印專用樣式 -->
     <style>
         @media print {
-            aside, .no-print { display: none !important; }
-            main { margin: 0 !important; padding: 0 !important; overflow: visible !important; }
+            /* 隱藏非內容元素 */
+            aside, .no-print, nav, button { display: none !important; }
+            
+            /* 關鍵修正：強制重置 HTML, BODY 與 ROOT 的高度與溢出設定 */
+            html, body, #root { 
+                height: auto !important; 
+                min-height: 0 !important;
+                overflow: visible !important; 
+                overflow-y: visible !important;
+            }
+
+            /* 針對 React 最外層容器 (通常有 flex h-screen) 解除限制 */
+            #root > div {
+                height: auto !important;
+                overflow: visible !important;
+                display: block !important; /* 取消 Flex 佈局，改為一般區塊流 */
+            }
+
+            /* 主內容區解除捲動限制 */
+            main { 
+                margin: 0 !important; 
+                padding: 0 !important; 
+                overflow: visible !important; 
+                height: auto !important;
+                width: 100% !important;
+                display: block !important;
+                position: static !important;
+            }
+
+            /* 強制換頁設定 */
             .print-break { break-before: page; }
-            body { background: white; color: black; }
+            
+            /* 基礎樣式重置 */
+            body { background: white; color: black; font-size: 12pt; }
             .prose { max-width: 100% !important; }
+            
+            /* 隱藏捲軸 */
+            ::-webkit-scrollbar { display: none; }
         }
-        /* 自訂捲軸 */
+
+        /* 自訂捲軸 (螢幕顯示用) */
         ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 5px; }
@@ -82,11 +116,30 @@
                             <Icons.Package className="w-8 h-8" />
                             AutoInstall: 全能型部署包裝器
                         </h3>
-                        <p className="text-lg leading-relaxed text-slate-700">
-                            AutoInstall 是一款專為 <strong>Microsoft Intune</strong> 與 <strong>SCCM</strong> 設計的通用安裝包裝器 (Universal Wrapper)。
-                            <br/><br/>
-                            它不僅解決了軟體靜默安裝的痛點，更具備強大的<strong>「環境標準化」</strong>能力——從桌布設定、WiFi 派送、字型安裝，到<strong>在 LTSC 版本上「復活」Windows Store 應用程式</strong>，都能在單次部署中一氣呵成。
-                        </p>
+<p className="text-lg leading-relaxed text-slate-700">
+    AutoInstall 是一款專為 <strong>Microsoft Intune</strong> 與 <strong>Microsoft Endpoint Configuration Manager (MECM)</strong> 設計的通用安裝包裝器 (Universal Wrapper)。
+    <br/><br/>
+    它不僅解決了軟體靜默安裝的痛點，更具備強大的<strong>「環境標準化」</strong>能力——從桌布設定、WiFi 派送、字型安裝，到<strong>在 LTSC 版本上「復活」Windows Store 應用程式</strong>，都能在單次部署中一氣呵成。
+</p>
+
+{/* 新增學校情境註解 */}
+<div className="mt-6 bg-slate-100 border-l-4 border-blue-400 p-4 rounded-r-lg">
+    <h4 className="font-bold text-slate-800 text-lg mb-2 flex items-center gap-2">
+        💡 名詞小教室：這是什麼？
+    </h4>
+    <ul className="list-disc list-inside text-base text-slate-700 space-y-2">
+        <li>
+            <strong className="text-blue-700">Microsoft Intune (雲端管理)：</strong>
+            <br/>
+            <span className="ml-6 block text-slate-600">這就是大家熟悉的<strong>「生生用平板」</strong>管理系統。不需要在學校架設伺服器，透過網際網路就能管理平板或筆電，適合移動設備。</span>
+        </li>
+        <li>
+            <strong className="text-blue-700">MECM / SCCM (地端伺服器)：</strong>
+            <br/>
+            <span className="ml-6 block text-slate-600">這是微軟傳統的強大管理工具(俗稱AD電腦管理)。通常用於管理<strong>大型電腦教室</strong>或<strong>行政電腦</strong>。它需要在校內架設伺服器，適合大量固定式設備的管理。</span>
+        </li>
+    </ul>
+</div>
                     </div>
 
                     <h3 className="text-3xl font-bold text-slate-900 border-b-2 border-slate-200 pb-4 mt-8">六大核心優勢</h3>
@@ -99,8 +152,9 @@
                             title="智慧環境配置" 
                             desc="一鍵處理桌布鎖定、WiFi 設定檔(XML/密碼)、字型安裝、登錄檔匯入，以及桌面捷徑的建立與清理。" 
                         />
+                        {/* 修改標題：USB 無等待佈署 */}
                         <FeatureCard 
-                            title="USB 現場秒殺佈署" 
+                            title="USB 無等待佈署" 
                             desc="專為維修人員設計。隨身碟插入執行後即可拔除，程式自動載入暫存區背景執行，無需等待。" 
                         />
                         <FeatureCard 
@@ -135,7 +189,7 @@
                 )
                 },
                 // #endregion
-
+                
 // #region [2. Structure]
                 structure: {
                 title: "2. 目錄結構",
